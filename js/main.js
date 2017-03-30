@@ -31,6 +31,7 @@ $(document).ready(function(){
 	//stage
 
 	let stage = new createjs.Stage("gameCanvas");
+	createjs.Touch.enable(stage);
 
 	//main rectangular display
 
@@ -53,7 +54,7 @@ $(document).ready(function(){
 
 	//game title
 
-	let gameTitle = new createjs.Text(gameTitleText, "30px Helvetica", mainCol);
+	let gameTitle = new createjs.Text(gameTitleText, "30px Arial", mainCol);
 	gameTitle.x=((w/2) - (gameTitle.getMeasuredWidth()/2));
 	gameTitle.y=250;
 
@@ -62,11 +63,11 @@ $(document).ready(function(){
 	bottomCont.x=0;
 	bottomCont.y=(h-20);
 
-	let gameVersion = new createjs.Text(gameVersionText, "10px Helvetica", oCol);
+	let gameVersion = new createjs.Text(gameVersionText, "10px Arial", oCol);
 	gameVersion.x=5;
 	gameVersion.y=5;
 
-	let gameAuthor = new createjs.Text(gameAuthorText, "10px Helvetica", oCol);
+	let gameAuthor = new createjs.Text(gameAuthorText, "10px Arial", oCol);
 	gameAuthor.x=(w - gameAuthor.getMeasuredWidth() - 5);
 	gameAuthor.y=5;
 	gameAuthor.addEventListener("click", function(e){
@@ -117,7 +118,7 @@ $(document).ready(function(){
     		setTimeout(loadMainGame,800);
     	});
 
-    	menuButtonStartText = new createjs.Text("Start", "20px Helvetica", "#fff");
+    	menuButtonStartText = new createjs.Text("Start", "20px Arial", "#fff");
     	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
     	menuButtonStartText.y = (menuButtonStart.y + (menuButtonStartText.getMeasuredHeight()/2));
 
