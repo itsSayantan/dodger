@@ -18,11 +18,12 @@ $(document).ready(function(){
 	*/
 
 	//Declarations
-	let w = 320,
-		h = 480,
+	let w = 358,
+		h = 638,
 		gameTitleText = "Dodger",
 		gameVersionText = "ver 0.1",
-		gameAuthorText = "Sayantan Ghosh (github.com/itsSayantan)";
+		gameAuthorText = "Sayantan Ghosh (github.com/itsSayantan)",
+		mainMenu,menuButtonStart,menuButStartText;
 
 	//stage
 
@@ -66,6 +67,10 @@ $(document).ready(function(){
 	let gameAuthor = new createjs.Text(gameAuthorText, "10px Helvetica", "#4db8ff");
 	gameAuthor.x=(w - gameAuthor.getMeasuredWidth() - 5);
 	gameAuthor.y=5;
+	gameAuthor.addEventListener("click", function(e){
+		e.preventDefault();
+		window.location = "https://github.com/itsSayantan";
+	});
 
 	//adding to view
 
@@ -90,6 +95,33 @@ $(document).ready(function(){
     /* Function loadGame */
 
     function loadGame(callback){
+    	/* create the main menu */
+    	mainMenu = new createjs.Container();
+    	mainMenu.x=0;
+    	mainMenu.y=(h/2)-20;
+
+    	menuButtonStart = new createjs.Shape();
+    	menuButtonStart.graphics.beginFill("#4db8ff").drawRoundRect(((w/2)-40),0,80,40,5,5,5,5);
+    	menuButtonStart.shadow = new createjs.Shadow("#999aaa", 0, 1, 3);
+
+    	//add mouse event listener to menuButtonStart
+
+    	menuButtonStart.addEventListener("mousedown", function(){
+    		menuButtonStart.shadow = new createjs.Shadow("#999aaa", 0, 1, 15);			
+    	});
+
+    	menuButtonStart.addEventListener("pressup", function(){
+    		menuButtonStart.shadow = new createjs.Shadow("#999aaa", 0, 1, 3);
+    		setTimeout(loadMainGame,800);
+    	});
+
+    	menuButtonStartText = new createjs.Text("Start", "20px Helvetica", "#fff");
+    	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
+    	menuButtonStartText.y = (mainMenu.x + (menuButtonStartText.getMeasuredHeight()/2));
+    	menuButtonStartText.shadow = new createjs.Shadow("#efefef", 0, 1, 1);
+
+    	mainMenu.addChild(menuButtonStart,menuButtonStartText);
+
     	callback(1);
     }
 
@@ -97,7 +129,12 @@ $(document).ready(function(){
 	
 	function handleCompleteLoading(){
 		console.log("Game loaded...");
-		gameTitle.text = "Hello";
-		/*stage.removeChild(gameTitle,lcont,bottomCont);*/
+		stage.removeChild(gameTitle,lcont);
+
+		stage.addChild(mainMenu);
+	}
+
+	function loadMainGame(){
+		alert(1);
 	}
 });
