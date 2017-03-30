@@ -18,8 +18,8 @@ $(document).ready(function(){
 	*/
 
 	//Declarations
-	let w = 358,
-		h = 638,
+	let w = 320,
+		h = 480,
 		gameTitleText = "Dodger",
 		gameVersionText = "ver 0.1",
 		gameAuthorText = "Sayantan Ghosh (github.com/itsSayantan)",
