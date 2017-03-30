@@ -45,26 +45,25 @@ $(document).ready(function(){
 	loadrect.graphics.beginFill("#bbbccc").drawRect(0,0,w,3);
 
 	let loadrectfill = new createjs.Shape();
-	loadrectfill.graphics.beginFill("#4db8ff").drawRect(0,0,w,3);
+	loadrectfill.graphics.beginFill("#0052cc").drawRect(0,0,w,3);
 	loadrectfill.scaleX=0; //setting the initial width of the loading rectangular bar to 0
 
 	//game title
 
-	let gameTitle = new createjs.Text(gameTitleText, "30px Helvetica", "#4db8ff");
+	let gameTitle = new createjs.Text(gameTitleText, "30px Helvetica", "#0052cc");
 	gameTitle.x=((w/2) - (gameTitle.getMeasuredWidth()/2));
 	gameTitle.y=250;
-	gameTitle.shadow = new createjs.Shadow("#999aaa", 0, 1, 3);
 
 	//game texts
 	let bottomCont = new createjs.Container();
 	bottomCont.x=0;
 	bottomCont.y=(h-20);
 
-	let gameVersion = new createjs.Text(gameVersionText, "10px Helvetica", "#4db8ff");
+	let gameVersion = new createjs.Text(gameVersionText, "10px Helvetica", "#777888");
 	gameVersion.x=5;
 	gameVersion.y=5;
 
-	let gameAuthor = new createjs.Text(gameAuthorText, "10px Helvetica", "#4db8ff");
+	let gameAuthor = new createjs.Text(gameAuthorText, "10px Helvetica", "#777888");
 	gameAuthor.x=(w - gameAuthor.getMeasuredWidth() - 5);
 	gameAuthor.y=5;
 	gameAuthor.addEventListener("click", function(e){
@@ -101,7 +100,7 @@ $(document).ready(function(){
     	mainMenu.y=(h/2)-20;
 
     	menuButtonStart = new createjs.Shape();
-    	menuButtonStart.graphics.beginFill("#4db8ff").drawRoundRect(((w/2)-40),0,80,40,5,5,5,5);
+    	menuButtonStart.graphics.beginFill("#0052cc").drawRoundRect(((w/2)-40),0,80,40,5,5,5,5);
     	menuButtonStart.shadow = new createjs.Shadow("#999aaa", 0, 1, 3);
 
     	//add mouse event listener to menuButtonStart
@@ -118,7 +117,6 @@ $(document).ready(function(){
     	menuButtonStartText = new createjs.Text("Start", "20px Helvetica", "#fff");
     	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
     	menuButtonStartText.y = (mainMenu.x + (menuButtonStartText.getMeasuredHeight()/2));
-    	menuButtonStartText.shadow = new createjs.Shadow("#efefef", 0, 1, 1);
 
     	mainMenu.addChild(menuButtonStart,menuButtonStartText);
 
