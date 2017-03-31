@@ -118,11 +118,11 @@ $(document).ready(function(){
 
     	//Menu Button Texts
 
-    	menuButtonStartText = new createjs.Text("Start", "20px Arial", "#fff");
+    	menuButtonStartText = new createjs.Text("Start", "bold 20px Arial", "#fff");
     	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
     	menuButtonStartText.y = (menuButtonStart.y + (menuButtonStartText.getMeasuredHeight()/2));
 
-    	githubButtonText = new createjs.Text("Github", "20px Arial", "#fff");
+    	githubButtonText = new createjs.Text("Github", "bold 20px Arial", "#fff");
     	githubButtonText.x = ((w/2) - (githubButtonText.getMeasuredWidth()/2));
     	githubButtonText.y = (githubButton.y + 50 + (githubButtonText.getMeasuredHeight()/2));
 
@@ -160,7 +160,7 @@ $(document).ready(function(){
 		mainGame.y = 10;
 
 		//score area
-		score = new createjs.Text(scoreText+s, "20px Arial", shadowCol);
+		score = new createjs.Text(scoreText+s, "bold 16px Arial", shadowCol);
 		score.x = 0;
 		score.y = 0;
 
@@ -190,7 +190,7 @@ $(document).ready(function(){
 		exitb.graphics.beginFill(mainCol).drawRoundRect(((w/2)-50),0,80,40,5,5,5,5);
 
 		//exitbtext
-		exitbtext = new createjs.Text("Exit", "20px Arial", "#fff");
+		exitbtext = new createjs.Text("Exit", "bold 20px Arial", "#fff");
 		exitbtext.x = ((w - exitbtext.getMeasuredWidth())/2) - 10;
 		exitbtext.y = exitb.y + exitbtext.getMeasuredHeight()/2;
 
