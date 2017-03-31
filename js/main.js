@@ -26,7 +26,8 @@ $(document).ready(function(){
 		shadowCol = "#999aaa",
 		mainCol = "#0052cc",
 		oCol="#777888",
-		mainMenu,menuButtonStart,menuButStartText;
+		mainMenu,menuButtonStart,menuButStartText,githubButton,githubButtonText,
+		mainGame,score,scoreText="Score: ",s=9999,gameControlsArea,leftb,leftbshape,rightb,rightbshape,exitb,exitbtext;
 
 	//stage
 
@@ -51,6 +52,8 @@ $(document).ready(function(){
 	let loadrectfill = new createjs.Shape();
 	loadrectfill.graphics.beginFill(mainCol).drawRect(0,0,w,3);
 	loadrectfill.scaleX=0; //setting the initial width of the loading rectangular bar to 0
+	//Initialize loadrectfillanim
+	let loadrectfillanim = createjs.Tween.get(loadrectfill, {loop: false});
 
 	//game title
 
@@ -86,8 +89,10 @@ $(document).ready(function(){
 
 	loadGame(function(amt){
 		//animate the loadrectfill
-		createjs.Tween.get(loadrectfill, {loop: false})
-		.to({scaleX: amt}, 2000, createjs.Ease.getPowInOut(4)).call(handleCompleteLoading);
+		if(amt == 1.0)
+			loadrectfillanim.to({scaleX: amt}, 1000, createjs.Ease.getPowInOut(4)).call(handleCompleteLoading);
+		else
+			loadrectfillanim.to({scaleX: amt}, 1000, createjs.Ease.getPowInOut(4));
 	});
 
 	//animation presets
@@ -101,11 +106,25 @@ $(document).ready(function(){
     	/* create the main menu */
     	mainMenu = new createjs.Container();
     	mainMenu.x=0;
-    	mainMenu.y=(h/2)-20;
+    	mainMenu.y=(h/2)-70;
 
     	menuButtonStart = new createjs.Shape();
     	menuButtonStart.graphics.beginFill(mainCol).drawRoundRect(((w/2)-40),0,80,40,5,5,5,5);
     	menuButtonStart.shadow = new createjs.Shadow(shadowCol, 0, 1, 3);
+
+    	githubButton = new createjs.Shape();
+    	githubButton.graphics.beginFill(mainCol).drawRoundRect(((w/2)-40),50,80,40,5,5,5,5);
+    	githubButton.shadow = new createjs.Shadow(shadowCol, 0, 1, 3);
+
+    	//Menu Button Texts
+
+    	menuButtonStartText = new createjs.Text("Start", "20px Arial", "#fff");
+    	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
+    	menuButtonStartText.y = (menuButtonStart.y + (menuButtonStartText.getMeasuredHeight()/2));
+
+    	githubButtonText = new createjs.Text("Github", "20px Arial", "#fff");
+    	githubButtonText.x = ((w/2) - (githubButtonText.getMeasuredWidth()/2));
+    	githubButtonText.y = (githubButton.y + 50 + (githubButtonText.getMeasuredHeight()/2));
 
     	//add mouse event listener to menuButtonStart
 
@@ -118,13 +137,83 @@ $(document).ready(function(){
     		setTimeout(loadMainGame,800);
     	});
 
-    	menuButtonStartText = new createjs.Text("Start", "20px Arial", "#fff");
-    	menuButtonStartText.x = ((w/2) - (menuButtonStartText.getMeasuredWidth()/2));
-    	menuButtonStartText.y = (menuButtonStart.y + (menuButtonStartText.getMeasuredHeight()/2));
+    	//add mouse event listener to githubButton
 
-    	mainMenu.addChild(menuButtonStart,menuButtonStartText);
+    	githubButton.addEventListener("mousedown", function(){
+    		githubButton.shadow = new createjs.Shadow(shadowCol, 0, 1, 15);			
+    	});
 
-    	callback(1);
+    	githubButton.addEventListener("pressup", function(){
+    		githubButton.shadow = new createjs.Shadow(shadowCol, 0, 1, 3);
+    		window.location = "https://github.com/itsSayantan/dodger";
+    	});
+
+    	mainMenu.addChild(menuButtonStart,menuButtonStartText,githubButton,githubButtonText);
+
+    	//50% loading complete
+		callback(0.5);
+
+		/* Creating the main game assets */
+
+		mainGame = new createjs.Container();
+		mainGame.x = 10;
+		mainGame.y = 10;
+
+		//score area
+		score = new createjs.Text(scoreText+s, "20px Arial", shadowCol);
+		score.x = 0;
+		score.y = 0;
+
+		//main game area
+		mainGameArea = new createjs.Shape();
+		mainGameArea.graphics.beginFill("black").drawRect(0,30,(w-20),(h-120));
+
+		//game controls area
+		gameControlsArea = new createjs.Container();
+		gameControlsArea.x = 0;
+		gameControlsArea.y = (h-80);
+
+		//game controls
+		leftb = new createjs.Shape();
+		leftb.graphics.beginFill(mainCol).drawRoundRect(0,0,40,40,5,5,5,5);
+
+		leftbshape = new createjs.Shape();
+		leftbshape.graphics.beginFill("#fff").moveTo(30,10).lineTo(30,30).lineTo(10,20).lineTo(30,10);
+
+		rightb = new createjs.Shape();
+		rightb.graphics.beginFill(mainCol).drawRoundRect((w-60),0,40,40,5,5,5,5);
+
+		rightbshape = new createjs.Shape();
+		rightbshape.graphics.beginFill("#fff").moveTo(((w-60)+10),10).lineTo(((w-60)+30),20).lineTo(((w-60)+10),30).lineTo(((w-60)+10),10);
+
+		exitb = new createjs.Shape();
+		exitb.graphics.beginFill(mainCol).drawRoundRect(((w/2)-50),0,80,40,5,5,5,5);
+
+		//exitbtext
+		exitbtext = new createjs.Text("Exit", "20px Arial", "#fff");
+		exitbtext.x = ((w - exitbtext.getMeasuredWidth())/2) - 10;
+		exitbtext.y = exitb.y + exitbtext.getMeasuredHeight()/2;
+
+		/* Add event listener to buttons */
+		leftb.addEventListener("click", function(){
+			alert("left");
+		});
+
+		rightb.addEventListener("click", function(){
+			alert("right");
+		})
+
+		exitb.addEventListener("click", function(){
+			alert("exit");
+		});
+
+		//adding game controls to game controls area
+		gameControlsArea.addChild(leftb,leftbshape,rightb,rightbshape,exitb,exitbtext);
+		//adding to main game container
+		mainGame.addChild(score,mainGameArea,gameControlsArea);
+
+		//100% loading complete
+		callback(1.0);
     }
 
     /* Function handleCompleteLoading */
@@ -136,7 +225,12 @@ $(document).ready(function(){
 		stage.addChild(mainMenu);
 	}
 
+	/* Function loadmaingame */
+
 	function loadMainGame(){
-		alert(1);
+		console.log("Game Started...");
+		stage.removeChild(mainMenu);
+
+		stage.addChild(mainGame);
 	}
 });
