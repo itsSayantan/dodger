@@ -25,9 +25,15 @@ $(document).ready(function(){
 		gameAuthorText = "Sayantan Ghosh (github.com/itsSayantan)",
 		shadowCol = "#999aaa",
 		mainCol = "#0052cc",
+		enemyCol = "#ff0000",
 		oCol="#777888",
+		soundID,
 		mainMenu,menuButtonStart,menuButStartText,githubButton,githubButtonText,
-		mainGame,score,scoreText="Score: ",s=9999,gameControlsArea,leftb,leftbshape,rightb,rightbshape,exitb,exitbtext;
+		mainGame,score,scoreText="Score: ",s=0,
+		player,
+		max=280,min=10,gameInt,
+		enemyBottomVel=600,enemyGenTime=600,
+		gameover,gameoverText="Game Over. Refresh to play again";
 
 	//stage
 
@@ -109,11 +115,11 @@ $(document).ready(function(){
     	mainMenu.y=(h/2)-70;
 
     	menuButtonStart = new createjs.Shape();
-    	menuButtonStart.graphics.beginFill(mainCol).drawRoundRect(((w/2)-40),0,80,40,5,5,5,5);
+    	menuButtonStart.graphics.beginFill(mainCol).drawRect(((w/2)-40),0,80,40);
     	menuButtonStart.shadow = new createjs.Shadow(shadowCol, 0, 1, 3);
 
     	githubButton = new createjs.Shape();
-    	githubButton.graphics.beginFill(mainCol).drawRoundRect(((w/2)-40),50,80,40,5,5,5,5);
+    	githubButton.graphics.beginFill(mainCol).drawRect(((w/2)-40),50,80,40);
     	githubButton.shadow = new createjs.Shadow(shadowCol, 0, 1, 3);
 
     	//Menu Button Texts
@@ -160,57 +166,30 @@ $(document).ready(function(){
 		mainGame.y = 10;
 
 		//score area
-		score = new createjs.Text(scoreText+s, "bold 16px Arial", shadowCol);
+		score = new createjs.Text(scoreText+s, "14px Arial", oCol);
 		score.x = 0;
 		score.y = 0;
 
 		//main game area
 		mainGameArea = new createjs.Shape();
-		mainGameArea.graphics.beginFill("black").drawRect(0,30,(w-20),(h-120));
+		mainGameArea.graphics.beginFill("white").drawRect(0,30,(w-20),(h-80));
+		mainGameArea.shadow = new createjs.Shadow(shadowCol, 0, 0, 3);
 
-		//game controls area
-		gameControlsArea = new createjs.Container();
-		gameControlsArea.x = 0;
-		gameControlsArea.y = (h-80);
+		//create the player
+		player = new createjs.Shape();
+		player.graphics.beginFill(mainCol).drawRect(0,(h-80),20,20);
+		player.shadow = new createjs.Shadow(shadowCol, 0, 0, 5);
 
-		//game controls
-		leftb = new createjs.Shape();
-		leftb.graphics.beginFill(mainCol).drawRoundRect(0,0,40,40,5,5,5,5);
+		//set x-position of the player to the middle of the game area
+		player.x=(w/2) - 20;
 
-		leftbshape = new createjs.Shape();
-		leftbshape.graphics.beginFill("#fff").moveTo(30,10).lineTo(30,30).lineTo(10,20).lineTo(30,10);
+		//gameover
+		gameover = new createjs.Text(gameoverText, "16px Arial", mainCol);
+		gameover.x = (w/2) - (gameover.getMeasuredWidth()/2) - 10;
+		gameover.y = 50;
 
-		rightb = new createjs.Shape();
-		rightb.graphics.beginFill(mainCol).drawRoundRect((w-60),0,40,40,5,5,5,5);
-
-		rightbshape = new createjs.Shape();
-		rightbshape.graphics.beginFill("#fff").moveTo(((w-60)+10),10).lineTo(((w-60)+30),20).lineTo(((w-60)+10),30).lineTo(((w-60)+10),10);
-
-		exitb = new createjs.Shape();
-		exitb.graphics.beginFill(mainCol).drawRoundRect(((w/2)-50),0,80,40,5,5,5,5);
-
-		//exitbtext
-		exitbtext = new createjs.Text("Exit", "bold 20px Arial", "#fff");
-		exitbtext.x = ((w - exitbtext.getMeasuredWidth())/2) - 10;
-		exitbtext.y = exitb.y + exitbtext.getMeasuredHeight()/2;
-
-		/* Add event listener to buttons */
-		leftb.addEventListener("click", function(){
-			alert("left");
-		});
-
-		rightb.addEventListener("click", function(){
-			alert("right");
-		})
-
-		exitb.addEventListener("click", function(){
-			alert("exit");
-		});
-
-		//adding game controls to game controls area
-		gameControlsArea.addChild(leftb,leftbshape,rightb,rightbshape,exitb,exitbtext);
 		//adding to main game container
-		mainGame.addChild(score,mainGameArea,gameControlsArea);
+		mainGame.addChild(score,mainGameArea,player);
 
 		//100% loading complete
 		callback(1.0);
@@ -229,8 +208,90 @@ $(document).ready(function(){
 
 	function loadMainGame(){
 		console.log("Game Started...");
+
 		stage.removeChild(mainMenu);
 
 		stage.addChild(mainGame);
+
+
+		//listen to keyboard events
+
+		$(document).on("keydown", function(e){
+			//not disabling the reset functionality
+			if(e.keyCode != 116){
+				e.preventDefault();
+				let k = e.keyCode;
+
+				if(k == 37){
+					console.log("Move left");
+					
+					if(player.x>=10){
+						let newX = player.x - 10;
+						createjs.Tween.get(player, {loop: false})
+						.to({x:newX}, 10, createjs.Ease.getPowInOut(1));
+					}else{
+						console.log("cannot move to the left");
+					}
+				}else if(k == 39){
+					console.log("Move right");
+
+					if(player.x <= 270){
+						let newX = player.x + 10;
+						createjs.Tween.get(player, {loop: false})
+						.to({x:newX}, 10, createjs.Ease.getPowInOut(1));
+					}else{
+						console.log("cannot move to the right");
+					}
+				}
+			}
+		});
+
+		//Enemy generation and animation logic
+
+		gameInt = setInterval(function(){
+			//generate new enemies
+			let enew = new createjs.Shape();
+
+			enew.graphics.beginFill(enemyCol).drawRect(0,0,20,20);
+			enew.shadow = new createjs.Shadow(shadowCol, 0, 0, 5);
+
+			//set the position of this newly created enemy
+			p = getEnemyPos();
+
+			enew.x = p;
+			enew.y = 40;
+
+			//add this new enemy to the mainGame
+			mainGame.addChild(enew);
+
+			//animate this new enemy to the bottom
+
+			createjs.Tween.get(enew, {loop: false})
+			.to({y: (h-80)}, enemyBottomVel, createjs.Ease.getPowInOut(4)).call(enemyBottom);
+		},enemyGenTime);
 	}
+
+	/* Function getEnemyPos */
+
+	function getEnemyPos(){
+		return (Math.floor(Math.random() * (max-min+1) + min));
+	}
+
+	/* Function enemyBottom */
+
+	function enemyBottom(){
+		const diff = Math.abs(player.x - this.x);
+		if(diff <= 19){
+			console.log("Collision!!!");
+			clearInterval(gameInt);
+			mainGame.removeChild(mainGameArea,player,this);
+			mainGame.addChild(gameover);
+		}else{
+			//remove the current enemy
+			mainGame.removeChild(this);
+			++s;
+			score.text = scoreText+s;
+		}
+	}
+
 });

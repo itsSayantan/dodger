@@ -1,5 +1,14 @@
 body{
 	margin: 0;
+	text-align: center;
+}
+
+.gameIns{
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	margin-left: -150px;
+	width: 300px;
 }
 
 .canvasContainer{
@@ -11,6 +20,7 @@ body{
 	height: 480px;
 	width: 320px;
 	border: 1px solid #999aaa;
+	box-shadow: 0 0 0 3px #dddeee;
 }
 
 #gameCanvas{
